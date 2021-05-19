@@ -9,7 +9,7 @@ defmodule Flightex do
   alias Flightex.Users.Agent, as: UsersAgent
   alias Flightex.Users.CreateOrUpdate, as: CreateOrUpdateUser
 
-  def initial_agents do
+  def start_agents do
     UsersAgent.start_link()
     BookingsAgent.start_link()
   end
@@ -21,7 +21,7 @@ defmodule Flightex do
 
     - the user agent must have been initialized
 
-          iex> Flightex.initial_agents
+          iex> {:ok, _pid} = Flightex.start_agents
 
     - user succesfully created:
 
