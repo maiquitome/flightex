@@ -6,6 +6,7 @@ defmodule Flightex do
 
   alias Flightex.Bookings.Agent, as: BookingsAgent
   alias Flightex.Bookings.CreateOrUpdate, as: CreateOrUpdateBooking
+  alias Flightex.Bookings.Report, as: BookingsReport
   alias Flightex.Users.Agent, as: UsersAgent
   alias Flightex.Users.CreateOrUpdate, as: CreateOrUpdateUser
 
@@ -125,4 +126,8 @@ defmodule Flightex do
   defdelegate get_booking(booking_id),
     to: BookingsAgent,
     as: :get
+
+  defdelegate generate_report(from_date, to_date),
+    to: BookingsReport,
+    as: :build
 end
