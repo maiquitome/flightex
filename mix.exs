@@ -1,4 +1,6 @@
 defmodule Flightex.MixProject do
+  @moduledoc false
+
   use Mix.Project
 
   def project do
@@ -8,7 +10,16 @@ defmodule Flightex.MixProject do
       elixir: "~> 1.11",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
+      # if you want to use espec,
+      # test_coverage: [tool: ExCoveralls, test_task: "espec"]
     ]
   end
 
@@ -25,7 +36,8 @@ defmodule Flightex.MixProject do
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:decimal, "~> 2.0"},
       {:ex_machina, "~> 2.5.0"},
-      {:elixir_uuid, "~> 1.2"}
+      {:elixir_uuid, "~> 1.2"},
+      {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 
