@@ -1,6 +1,6 @@
 # ✈️ Flightex
 
-### 💻 Sobre o desafio 01
+## 💻 Sobre o desafio 01
 
 Nesse desafio, você deverá criar uma aplicação de reserva de voos, onde haverá o cadastro de usuários e o cadastro de reservas para um usuário.
 
@@ -65,7 +65,7 @@ O template está disponível na seguinte URL:
 [rocketseat-education/ignite-template-flightex](https://github.com/rocketseat-education/ignite-template-flightex)
 
 
-### 💻 Sobre o desafio 02
+## 💻 Sobre o desafio 02
 
 Nesse desafio, você deverá incrementar a sua solução do [desafio anterior](https://www.notion.so/Desafio-01-Reservas-de-voos-f5fd8814ce904360b2500449143e589e). Agora deverá ser possível também gerar relatórios das reservas de voos de acordo com o intervalo de tempo especificado na chamada da função.
 
@@ -93,3 +93,33 @@ user_id1,São Paulo,Londres,2021-04-18 08:45:25.607218
 ```
 
 ID do usuário, cidade de origem, cidade de destino e data.
+
+## 💻 Sobre o desafio 3
+
+Nesse desafio, você deverá criar outros testes com o objetivo de completar 100% na cobertura excoveralls. Para isso, utilize a lib do [excoveralls](https://github.com/parroty/excoveralls), adicione a dependência dele no seu mix.exs e essas configurações.
+
+```elixir
+def project do
+  [
+    app: :excoveralls,
+    version: "1.0.0",
+    elixir: "~> 1.0.0",
+    deps: deps(),
+    test_coverage: [tool: ExCoveralls],
+    preferred_cli_env: [
+      coveralls: :test,
+      "coveralls.detail": :test,
+      "coveralls.post": :test,
+      "coveralls.html": :test
+    ]
+    # if you want to use espec,
+    # test_coverage: [tool: ExCoveralls, test_task: "espec"]
+  ]
+end
+
+defp deps do
+  [
+    {:excoveralls, "~> 0.10", only: :test},
+  ]
+end
+```
