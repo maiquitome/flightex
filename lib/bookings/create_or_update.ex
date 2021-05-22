@@ -14,11 +14,13 @@ defmodule Flightex.Bookings.CreateOrUpdate do
 
   - the user agent and booking agent must have been initialized
 
-          iex> Flightex.initial_agents
+        iex> {:ok, _pid} = Flightex.start_agents
 
   - creating the user:
 
         iex> {:ok, %{id: user_uuid} = user} = Flightex.Users.User.build("Maiqui", "maiquitome@gmail.com", "011.123.012-26")
+
+        iex> {:ok, _uuid} = Flightex.Users.Agent.save(user)
 
   - creating the book
 
@@ -34,8 +36,8 @@ defmodule Flightex.Bookings.CreateOrUpdate do
   """
   def call(user_uuid, %{} = booking_params) do
     with {:ok, _user} <- UsersAgent.get_by_id(user_uuid),
-         {:ok, %Booking{}} = booking <- build_booking(user_uuid, booking_params) do
-      save_booking(booking)
+         {:ok, %Booking{} = booking} <- build_booking(user_uuid, booking_params) do
+      BookingsAgent.save(booking)
     else
       error -> error
     end
@@ -56,12 +58,4 @@ defmodule Flightex.Bookings.CreateOrUpdate do
   defp build_booking(_user_uuid, _any) do
     {:error, @all_fields_message}
   end
-
-  defp save_booking({:ok, %Booking{id: id} = booking}) do
-    BookingsAgent.save(booking)
-
-    {:ok, id}
-  end
-
-  defp save_booking({:error, _reason} = error), do: error
 end
