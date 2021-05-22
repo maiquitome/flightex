@@ -127,7 +127,7 @@ defmodule Flightex do
     to: BookingsAgent,
     as: :get
 
-  defdelegate generate_report(from_date, to_date),
+  defdelegate generate_report(from_date, to_date, file_name \\ "report.csv"),
     to: BookingsReport,
     as: :build
 end
