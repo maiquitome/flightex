@@ -1,17 +1,19 @@
 defmodule Flightex.Users.CreateOrUpdateTest do
+  @moduledoc false
+
   use ExUnit.Case, async: true
 
   alias Flightex.Users.{Agent, CreateOrUpdate}
+  alias Flightex.Users.User
 
   describe "call/1" do
     setup do
-      Agent.start_link(%{})
-      # O Agent.start_link vai iniciar os 2 agents antes do teste
-      # Deve ser implementado para os testes passarem
+      Agent.start_link()
+
       :ok
     end
 
-    test "when all params are valid, return a tuple" do
+    test "when all params are valid, returns a tuple" do
       params = %{
         name: "Jp",
         email: "jp@banana.com",
@@ -20,9 +22,9 @@ defmodule Flightex.Users.CreateOrUpdateTest do
 
       CreateOrUpdate.call(params)
 
-      {_ok, response} = Agent.get(params.cpf)
+      {:ok, response} = Agent.get_by_cpf(params.cpf)
 
-      expected_response = %Flightex.Users.User{
+      expected_response = %User{
         cpf: "12345678900",
         email: "jp@banana.com",
         id: response.id,
@@ -32,14 +34,14 @@ defmodule Flightex.Users.CreateOrUpdateTest do
       assert response == expected_response
     end
 
-    test "when cpf is a integer, returns an error" do
+    test "when cpf is not a string, returns an error" do
       params = %{
         name: "Jp",
         email: "jp@banana.com",
         cpf: 12_345_678_900
       }
 
-      expected_response = {:error, "Cpf must be a String"}
+      expected_response = {:error, "Cpf must be a string!"}
 
       response = CreateOrUpdate.call(params)
 
