@@ -1,35 +1,50 @@
 defmodule Flightex.Bookings.CreateOrUpdateTest do
+  @moduledoc false
+
   use ExUnit.Case, async: false
 
   alias Flightex.Bookings.{Agent, CreateOrUpdate}
+  alias Flightex.Bookings.Booking
 
-  describe "call/1" do
+  describe "call/2" do
     setup do
-      Agent.start_link(%{})
+      Flightex.start_agents()
 
-      :ok
+      user_params = %{name: "Maiqui", email: "maiquitome@gmail.com", cpf: "011.123.012-26"}
+
+      {:ok, user_uuid} = Flightex.create_user(user_params)
+
+      {:ok, user_id: user_uuid}
     end
 
-    test "when all params are valid, returns a valid tuple" do
-      params = %{
-        complete_date: [2001, 5, 7, 3, 5, 0],
+    test "when all params are valid, returns a booking", %{user_id: user_uuid} do
+      booking_params = %{
+        complete_date: "07/05/2001",
         local_origin: "Brasilia",
-        local_destination: "Bananeiras",
-        user_id: "12345678900",
-        id: UUID.uuid4()
+        local_destination: "Bananeiras"
       }
 
-      {_ok, uuid} = CreateOrUpdate.call(params)
+      {:ok, booking_uuid} = CreateOrUpdate.call(user_uuid, booking_params)
 
-      {_ok, response} = Agent.get(uuid)
+      {:ok, %{id: booking_id, complete_date: complete_date} = response} = Agent.get(booking_uuid)
 
-      expected_response = %Flightex.Bookings.Booking{
-        id: response.id,
-        complete_date: [2001, 5, 7, 3, 5, 0],
+      expected_response = %Booking{
+        id: booking_id,
+        complete_date: complete_date,
         local_destination: "Bananeiras",
         local_origin: "Brasilia",
-        user_id: "12345678900"
+        user_id: user_uuid
       }
+
+      assert response == expected_response
+    end
+
+    test "when some param is not informed, returns an error", %{user_id: user_uuid} do
+      response = CreateOrUpdate.call(user_uuid, %{})
+
+      expected_response =
+        {:error,
+         "Inform all fields: user_uuid, %{complete_date: value, local_origin: value, local_destination: value}"}
 
       assert response == expected_response
     end
