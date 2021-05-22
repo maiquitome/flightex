@@ -50,6 +50,14 @@ defmodule Flightex.Users.User do
     {:error, "Name must be a string!"}
   end
 
+  def build(_name, _email, cpf) when not is_bitstring(cpf) do
+    {:error, "Cpf must be a string!"}
+  end
+
+  def build(_name, email, _cpf) when not is_bitstring(email) do
+    {:error, "Email must be a string!"}
+  end
+
   def build(name, email, cpf) do
     id = UUID.uuid4()
 
