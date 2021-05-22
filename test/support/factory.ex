@@ -1,10 +1,12 @@
 defmodule Flightex.Factory do
+  @moduledoc false
+
   use ExMachina
 
   alias Flightex.Bookings.Booking
   alias Flightex.Users.User
 
-  def users_factory do
+  def user_factory do
     %User{
       id: UUID.uuid4(),
       name: "Jp",
